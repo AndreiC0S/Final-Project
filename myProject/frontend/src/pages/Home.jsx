@@ -1,6 +1,6 @@
 import React from 'react'
 import Carousel from './assets/homeAssets/Carousel'
-import Sidebar from '../Components/Sidebar'
+import Sidebar from '../Components/layout/Sidebar'
 
 export default function Home() {
   return (

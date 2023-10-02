@@ -39,10 +39,16 @@ exports.userRouter = void 0;
 const express_1 = __importDefault(require("express"));
 const bodyParser = __importStar(require("body-parser"));
 const userModel = __importStar(require("../models/user"));
+const check_1 = require("express-validator/check");
+const jwt_1 = require("../jwt");
+const jwt_2 = require("../jwt");
 const userRouter = express_1.default.Router();
 exports.userRouter = userRouter;
 var jsonParser = bodyParser.json();
 userRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!(0, jwt_2.verifyToken)(req, res)) {
+        return res.status(403).json({ "message": '<b>Trebue sa fi logat pentru a accesa aceasta zona!<b>' });
+    }
     userModel.findAll((err, users) => {
         if (err) {
             return res.status(500).json({ "errorMessage": err.message });
@@ -51,6 +57,9 @@ userRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     });
 }));
 userRouter.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!(0, jwt_2.verifyToken)(req, res)) {
+        return res.status(403).json({ "message": '<b>Trebue sa fi logat pentru a accesa aceasta zona!<b>' });
+    }
     const userId = Number(req.params.id);
     userModel.findOne(userId, (err, user) => {
         if (err) {
@@ -59,18 +68,31 @@ userRouter.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function*
         res.status(200).json({ "data": user });
     });
 }));
-userRouter.post("/", jsonParser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    console.log(req.body);
+userRouter.post("/", jsonParser, [
+    (0, check_1.check)('nume').not().isEmpty(),
+    (0, check_1.check)('prenume').not().isEmpty(),
+    (0, check_1.check)('email', 'Please include a valid email').isEmail().normalizeEmail({ gmail_remove_dots: false }),
+    (0, check_1.check)('parola', 'Password must be 8 or more characters').matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[●!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]).{7,}$/, "i")
+], (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(" req.body = ", req.body);
+    const errors = (0, check_1.validationResult)(req);
+    console.log("errors = ", errors);
+    if (!errors.isEmpty()) {
+        return res.status(400).send({ 'message': errors.array() });
+    }
     const newUser = req.body;
     userModel.create(newUser, (err, userId) => {
         if (err) {
             return res.status(500).json({ "message": err.message });
         }
-        res.status(200).json({ "userId": userId });
+        res.status(200).json({ "message": 'Utilizatorul a fost adaugat cu succes!' });
     });
 }));
 // Edit user
 userRouter.put("/:id", jsonParser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!(0, jwt_2.verifyToken)(req, res)) {
+        return res.status(403).json({ "message": '<b>Trebue sa fi logat pentru a accesa aceasta zona!<b>' });
+    }
     const user = req.body;
     console.log(req.body);
     userModel.update(user, (err) => {
@@ -85,9 +107,12 @@ userRouter.put("/:id", jsonParser, (req, res) => __awaiter(void 0, void 0, void 
 }));
 // Delete user
 userRouter.delete("/:id", jsonParser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const user = req.body;
-    console.log(req.body);
-    userModel.deleteUser(user, (err) => {
+    if (!(0, jwt_2.verifyToken)(req, res)) {
+        return res.status(403).json({ "message": '<b>Trebue sa fi logat pentru a accesa aceasta zona!<b>' });
+    }
+    const userId = Number(req.params.id);
+    console.log(userId);
+    userModel.deleteUser(userId, (err) => {
         if (err) {
             return res.status(500).json({ "message": err.message });
         }
@@ -95,5 +120,35 @@ userRouter.delete("/:id", jsonParser, (req, res) => __awaiter(void 0, void 0, vo
         res.status(200).json({
             "message": 'success'
         });
+    });
+}));
+userRouter.post("/veifyLogin", jsonParser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(req.body);
+    const loginUser = req.body;
+    userModel.veifyPassword(loginUser, (err, user) => {
+        if (err) {
+            return res.status(401).send({
+                accessToken: null,
+                message: err.message
+            });
+            //return res.status(500).json({"message": err.message});
+        }
+        var token = (0, jwt_1.generateToken)();
+        console.log('JWT', token);
+        //res.status(200).json({"message": 'success'});
+        res.status(200).send({
+            id: user.id,
+            nume: user.nume,
+            prenume: user.prenume,
+            email: user.email,
+            roles: 'ADMIN',
+            accessToken: token
+        });
+    });
+}));
+userRouter.post("/logout", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    return res.status(200).json({
+        accessToken: null,
+        message: "User has been logged out."
     });
 }));
