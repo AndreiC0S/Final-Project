@@ -8,12 +8,15 @@ import ProductList from "./pages/ProductList"
 import About from "./pages/About";
 import Contact from "./pages/Contact"
 import SignUp from "./Components/login-Register/SignUp";
+import Stripe from "./Components/Stripe_card_pay/stripe";
+import ShoppingList from "./Components/ShoppingCart/ShoppingList";
 
 
 
 
 
 import './App.css';
+
 
 function App() {
   return (
@@ -26,6 +29,8 @@ function App() {
               <Route path="about" element={<About/>} />
               <Route path="contact" element={<Contact/>} />
               <Route path="Sign-up" element={<SignUp/>} />
+              <Route path="shopping-list" element={<ShoppingList/>} />
+              <Route path="payment" element={<Stripe/>} />
               
 
 

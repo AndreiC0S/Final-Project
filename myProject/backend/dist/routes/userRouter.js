@@ -141,7 +141,7 @@ userRouter.post("/veifyLogin", jsonParser, (req, res) => __awaiter(void 0, void 
             nume: user.nume,
             prenume: user.prenume,
             email: user.email,
-            roles: 'ADMIN',
+            roles: 'USER',
             accessToken: token
         });
     });

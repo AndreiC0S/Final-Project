@@ -16,9 +16,9 @@ export default function Layout() {
     <NavBar/>
     
       <div className='fixed right-[3vw] top-[8vh] z-40'>
-        <CartContextProvider>
+        {/* <CartContextProvider> */}
           <ShoppingCart/>
-        </CartContextProvider>
+        {/* </CartContextProvider> */}
       </div>
 
     <Outlet/>

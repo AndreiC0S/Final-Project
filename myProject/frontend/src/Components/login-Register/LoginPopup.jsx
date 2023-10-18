@@ -21,10 +21,7 @@ export default function LoginPopup({ toggle, isUser }) {
       .email("Adresa de email invalida!")
       .required("Camp obligatoriu!"),
     parola: Yup.string().required("Camp obligatoriu!"),
-    // .matches(
-    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$-%^&*])(?=.{8,})/,
-    //   "Must Contain min 8 Characters, One Uppercase, One Lowercase, One Number and One Special Case Character"
-    // ),
+    
   });
 
   const [formData, setFormData] = useState({

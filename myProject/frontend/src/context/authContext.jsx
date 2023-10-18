@@ -17,12 +17,20 @@ export const AuthContexProvider = ({children}) => {
     };
 
     const logout = async (inputs) => {
-        alert('doriti sa va delogati?');
+        var answer = window.confirm("Are you sure you want to do that?");
+        if (answer) {
+            
+        // alert('doriti sa va delogati?');
         const res = await axios.post(configData.SERVER_URL+'logout');
         setauthenticated(false);
         localStorage.setItem("authenticated", false);
         setCurrentUser(null);
         console.log(res.data);
+        }
+        else {
+            return
+        }
+        
        
     };
 

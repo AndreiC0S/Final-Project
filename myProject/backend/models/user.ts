@@ -44,6 +44,7 @@ export const findOne = (userId: number, callback: Function) => {
   });
 };
 
+
 export const create = (user: User, callback: Function) => {
   //Verificam daca exista user cu aceasta adresa de email
   const sql = "SELECT * FROM users WHERE email = ?";
@@ -127,6 +128,7 @@ export const update = (user: User, callback: Function) => {
     callback(null);
   });
 };
+
 // delete user
 export const deleteUser = (user: number, callback: Function) => {
   console.log(user);
@@ -150,6 +152,8 @@ export const veifyPassword = (user: User, callback: Function) => {
     }
     if ((result as any).length == 1) {
       const row = (<RowDataPacket>result)[0];
+      console.log("passwordUser",passwordUser)
+        console.log("row.password",row.parola)
       var password_hash = row.parola;
       const verified = bcryptjs.compareSync(passwordUser!, password_hash);
       if (verified) {

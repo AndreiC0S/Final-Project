@@ -147,6 +147,8 @@ const veifyPassword = (user, callback) => {
         }
         if (result.length == 1) {
             const row = result[0];
+            console.log("passwordUser", passwordUser);
+            console.log("row.password", row.parola);
             var password_hash = row.parola;
             const verified = bcryptjs_1.default.compareSync(passwordUser, password_hash);
             if (verified) {

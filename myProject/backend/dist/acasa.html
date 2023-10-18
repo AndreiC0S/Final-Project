@@ -15,7 +15,7 @@
         <a href="/">Home</a>
       </li>
       <li>
-        <a href="/users">Users</a>
+        <a href="/product.html">products</a>
       </li>
       <li>
         <a href="/users/1">Users 1</a>
@@ -28,6 +28,21 @@
       <p> Express + TypeScript Server</p>
       <p> Partea de API este folosita de REACT prin web service : REST</p>
        </div>
+  </div>
+  <div class="d-flex flex-column">
+
+    <form action="http://localhost:3002/products" method="post" class="d-flex flex-column"> Add product <br>
+      
+  
+        <input type="text" name="nume_produs" placeholder="nume_produs" required> <br>
+        
+        <input type="text" name="descriere_produs" required> <br>
+        <input type="text" name="poza_url" placeholder="product pic url" required> <br>
+        <input type="text" name="categorie_produs" placeholder="product category" required><br>
+        <input type="text" name="pret_produs" placeholder="product price" required> <br>
+      
+        <input type="submit" value="send"> 
+    </form>
   </div>
 </body>
 </html>

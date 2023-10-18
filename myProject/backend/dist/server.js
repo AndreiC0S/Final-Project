@@ -9,8 +9,9 @@ const cors_1 = __importDefault(require("cors"));
 const path_1 = __importDefault(require("path"));
 const express_session_1 = __importDefault(require("express-session"));
 const userRouter_1 = require("./routes/userRouter");
-const postRouter_1 = require("./routes/postRouter");
+const productsRouter_1 = require("./routes/productsRouter");
 const adminRouter_1 = require("./routes/adminRouter");
+const stripeRouter_1 = require("./routes/stripeRouter");
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.urlencoded({ extended: true }));
@@ -19,16 +20,17 @@ app.use((0, express_session_1.default)({
     resave: true,
     saveUninitialized: true
 }));
-app.use(express_1.default.static(path_1.default.join(__dirname, 'static')));
 const port = process.env.PORT;
 app.use((0, cors_1.default)());
 app.use("/users", userRouter_1.userRouter);
-app.use("/posts", postRouter_1.postRouter);
+app.use("/products", productsRouter_1.prodRouter);
 app.use("/admin", adminRouter_1.adminRouter);
 app.get('/', (req, res) => {
     //res.send('Express + TypeScript Server!!!!');
     res.sendFile(path_1.default.join(__dirname + '/acasa.html'));
+    // res.sendFile(path.join(__dirname+'/product.html'));
 });
+app.use("/api/stripe-payment", stripeRouter_1.stripeRouter);
 app.listen(port, () => {
-    console.log(`[server]: Server is running at https://localhost:${port}`);
+    console.log(`[server]: Server is running at http://localhost:${port}`);
 });

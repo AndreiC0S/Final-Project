@@ -85,6 +85,7 @@ userRouter.put("/:id",jsonParser, async (req: Request, res: Response) => {
       });
   })
 });
+
 // Delete user
 userRouter.delete("/:id",jsonParser, async (req: Request, res: Response) => {
   if (!verifyToken(req, res)) {
@@ -103,6 +104,7 @@ userRouter.delete("/:id",jsonParser, async (req: Request, res: Response) => {
       });
   })
 });
+
 userRouter.post("/veifyLogin",jsonParser, async (req: Request, res: Response) => {
   console.log(req.body);
   const loginUser: User = req.body;
@@ -122,7 +124,7 @@ userRouter.post("/veifyLogin",jsonParser, async (req: Request, res: Response) =>
       nume: user.nume,
       prenume: user.prenume,
       email: user.email,
-      roles: 'ADMIN',
+      roles: 'USER',
       accessToken: token
     });
   });

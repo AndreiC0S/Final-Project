@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import { AuthContexProvider } from './context/authContext';
+import { CartContextProvider } from "./context/cartContext";
 
 
 
@@ -11,7 +12,13 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
       <AuthContexProvider>
+     <CartContextProvider>
+     
+
       <App />
+
+      
+     </CartContextProvider>
       </AuthContexProvider>
       
     
