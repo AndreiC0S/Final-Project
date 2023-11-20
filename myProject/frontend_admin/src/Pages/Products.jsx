@@ -3,15 +3,16 @@ import React, { useEffect, useState } from "react";
 import "./css/product.css";
 import AddProduct from "../Components/prod_comp/AddProduct";
 
-import Edit_product from "../Components/prod_comp/Edit_product";
-import { avatar } from "@material-tailwind/react";
+import EditProduct from "../Components/prod_comp/Edit_product";
+// import { avatar } from "@material-tailwind/react";
 
 export default function Products() {
   const [editProd, setEditProd] = useState(false);
   const [getProd, setGetProd] = useState([]);
-
+  const [addProd, setAddProd] = useState(false);
   const [passData, setPassData] = useState([]);
 
+  // Function to handle data for editing a product
   const dataProp = (
     id,
     nume_produs,
@@ -21,7 +22,6 @@ export default function Products() {
     pret_produs
   ) => {
     setEditProd(true);
-
     setPassData([]);
 
     const newElements = {
@@ -34,22 +34,19 @@ export default function Products() {
     };
 
     setPassData((oldArray) => [...oldArray, newElements]);
-
-    // console.log(passData)
   };
 
+  // Function to delete a product
   const deleteProd = (id, title) => {
     var answer = window.confirm(
-      `are you sure you want to delete the product with ID:${id}  and title: ${title}?`
+      `Are you sure you want to delete the product with ID: ${id} and title: ${title}?`
     );
 
     if (answer) {
       axios
         .delete(`http://localhost:3002/products/${id}`)
         .then((res) => {
-          alert(`id: ${id} title: ${title} was deleted`);
-          console.log("test delete", test);
-          // const updatedArray = getProd.filter(item => item.id !== id)
+          alert(`ID: ${id} Title: ${title} was deleted`);
           setGetProd(getProd.filter((item) => item.id !== id));
         })
         .catch((error) => {
@@ -60,83 +57,208 @@ export default function Products() {
     }
   };
 
+  //---------------------- Filter products by ID--------------------------------
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
+
+  // Functia care se ocupă de căutare
+  const handleSearch = () => {
+    const filtered = getProd.filter((product) => {
+      const idMatch = product.id.toString().includes(searchTerm);
+      const nameMatch = product.nume_produs
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+      return idMatch || nameMatch;
+    });
+    setFilteredProducts(filtered);
+  };
+
+  // Functia care se ocupă de resetarea căutării
+  const clearSearch = () => {
+    setSearchTerm("");
+    setFilteredProducts([]);
+  };
+
+  // Functia care se activează la apăsarea tastei "Enter"
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  // ---------------------------------------------------------------------------
+
   useEffect(() => {
+    // Fetch products from the server on component mount
     axios.get(`http://localhost:3002/products`).then((res) => {
       setGetProd(res.data.data);
-      console.log(getProd);
     });
   }, []);
 
-  
-
   return (
     <>
-      <div className="flex  w-[100hw] h-[3vh] bg-amber-300">
-        <p className="flex absolute left-[46.5%] bg-black h-[30px]  pt-[2px] text-white">
-          Products
-        </p>
-      </div>
-      {editProd && (
-        <Edit_product setEditProd={setEditProd} passData={passData} dataProp={dataProp} />
-      )}
-      <AddProduct />
+      <div>
+        <div className="flex  w-[100hw] h-[3vh] bg-amber-300">
+          <p className="flex absolute left-[46.5%] bg-black h-[30px]  pt-[2px] text-white">
+            Products
+          </p>
+          <button onClick={() => setAddProd(!addProd)}>AddProd</button>
+        </div>
+        {editProd && (
+          <EditProduct
+            setEditProd={setEditProd}
+            passData={passData}
+            dataProp={dataProp}
+          />
+        )}
+        {addProd && <AddProduct />}
 
-      <div
-        id="parent"
-        className="flex flex-col absolute right-0 top-[10.53vh] w-[50%] h-[50vh] border-2 border-indigo-600 overflow-auto "
-      >
-        {getProd.map((Val) => {
-          return (
-            <>
-              <div
-                key={Val.id}
-                className=" flex  flex-row border-2 border-black w-[96%] h-[20%] m-[5px] zIndex "
-              >
-                <div className="w-[20%] h-[100%] border-e-2 border-black ">
-                  <img
-                    className="h-[100%] w-[100%]"
-                    src={Val.poza_url}
-                    alt="img"
-                  />
-                </div>
-                <div className="w-[20%] h-[100%] border-e-2 border-black ">
-                  <p>id: {Val.id}</p>
-                  <p>{Val.nume_produs}</p>
-                  <p className="text-s">{Val.categorie_produs}</p>
-                  <p>{Val.pret_produs} $</p>
-                </div>
-                <div className="w-[40%] h-[100%] border-e-2 border-black overflow-auto">
-                  <p className="">{Val.descriere_produs}</p>
-                </div>
-                <div className="w-[20%] h-[100%] bg-black">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      dataProp(
-                        Val.id,
-                        Val.nume_produs,
-                        Val.descriere_produs,
-                        Val.poza_url,
-                        Val.categorie_produs,
-                        Val.pret_produs
-                      )
-                    }
-                    className="w-[100%] h-[45%]  bg-green-500"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => deleteProd(Val.id, Val.nume_produs)}
-                    className="w-[100%] h-[45%] mt-[5%] bg-red-500"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </>
-          );
-        })}
+        <div
+          id="parent"
+          className="flex flex-col absolute right-0 top-[10.54vh] w-[50%] h-[80.5vh] border-2 border-indigo-600 overflow-auto "
+        >
+          {/* Bara de căutare */}
+          <div className="flex items-center  mb-4">
+            <input
+              type="text"
+              placeholder="Caută după ID sau nume"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="p-2 border border-gray-300 rounded mr-2"
+            />
+            <button
+              onClick={handleSearch}
+              className="bg-blue-500 text-white p-2 rounded"
+            >
+              Caută
+            </button>
+            <button
+              onClick={clearSearch}
+              className="bg-gray-500 text-white p-2 rounded"
+            >
+              Resetare
+            </button>
+          </div>
+          {filteredProducts.length > 0
+            ? // Dacă există produse filtrate, le afișează
+              filteredProducts
+                .slice()
+                .reverse()
+                .map((Val, index) => {
+                  return (
+                    <>
+                      <div
+                        key={Val.id}
+                        className=" flex  flex-row border-2 border-black w-[96%] max-h-[100px] m-[5px] zIndex "
+                      >
+                        <div className="w-[20%] h-[100%] border-e-2 border-black ">
+                          <img
+                            className="h-[100%] w-[100%]"
+                            src={Val.poza_url}
+                            alt="img"
+                          />
+                        </div>
+                        <div className="w-[20%] h-[100%] border-e-2 border-black ">
+                          <p>id: {Val.id}</p>
+                          <p>{Val.nume_produs}</p>
+                          <p className="text-s">{Val.categorie_produs}</p>
+                          <p>{Val.pret_produs} $</p>
+                        </div>
+                        <div className="w-[40%] h-[100%] border-e-2 border-black overflow-auto">
+                          <p className="">{Val.descriere_produs}</p>
+                        </div>
+                        <div className="w-[20%] h-[100%] bg-black">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              dataProp(
+                                Val.id,
+                                Val.nume_produs,
+                                Val.descriere_produs,
+                                Val.poza_url,
+                                Val.categorie_produs,
+                                Val.pret_produs
+                              )
+                            }
+                            className="w-full h-[45%] bg-green-500 text-white font-semibold rounded hover:bg-green-600 transition duration-300"
+                          >
+                            Edit
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => deleteProd(Val.id, Val.nume_produs)}
+                            className="w-full h-[45%] mt-2 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-300"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  );
+                })
+            : // Dacă nu există produse filtrate, afișează toate produsele
+              getProd
+                .slice()
+                .reverse()
+                .map((Val2, index2) => {
+                  return (
+                    <>
+                      <div
+                        key={Val2.id}
+                        className=" flex  flex-row border-2 border-black w-[96%] max-h-[100px] m-[5px] zIndex "
+                      >
+                        <div className="w-[20%] h-[100%] border-e-2 border-black ">
+                          <img
+                            className="h-[100%] w-[100%]"
+                            src={Val2.poza_url}
+                            alt="img"
+                          />
+                        </div>
+                        <div className="w-[20%] h-[100%] border-e-2 border-black ">
+                          <p>id: {Val2.id}</p>
+                          <p>{Val2.nume_produs}</p>
+                          <p className="text-s">{Val2.categorie_produs}</p>
+                          <p>{Val2.pret_produs} $</p>
+                        </div>
+                        <div className="w-[40%] h-[100%] border-e-2 border-black overflow-auto">
+                          <p className="">{Val2.descriere_produs}</p>
+                        </div>
+                        <div className="w-[20%] h-[100%] bg-black">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              dataProp(
+                                Val2.id,
+                                Val2.nume_produs,
+                                Val2.descriere_produs,
+                                Val2.poza_url,
+                                Val2.categorie_produs,
+                                Val2.pret_produs
+                              )
+                            }
+                            className="w-full h-[45%] bg-green-500 text-white font-semibold rounded hover:bg-green-600 transition duration-300"
+                          >
+                            Edit
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              deleteProd(Val2.id, Val2.nume_produs)
+                            }
+                            className="w-full h-[45%] mt-2 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-300"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  );
+                })}
+        </div>
       </div>
     </>
   );

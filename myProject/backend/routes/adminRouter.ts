@@ -22,8 +22,21 @@ adminRouter.get("/", async (req: Request, res: Response) => {
 
     res.status(200).json({"data": users});
   });
+
 });
 
+adminRouter.get("/:id", async (req: Request, res: Response) => {
+  if (!verifyToken(req, res)) {
+    return res.status(403).json({"message": '<b>Trebue sa fi logat pentru a accesa aceasta zona!<b>'});
+}
+  const adminId: number = Number(req.params.id);
+  adminModel.findOne(adminId, (err: Error, user: Admin) => {
+    if (err) {
+      return res.status(500).json({"message": err.message});
+    }
+    res.status(200).json({"data": user});
+  })
+});
 
 adminRouter.post("/",jsonParser,
 
@@ -53,13 +66,15 @@ adminRouter.post("/",jsonParser,
 });
 
 // Delete user
-adminRouter.delete("/:id",jsonParser, async (req: Request, res: Response) => {
+adminRouter.delete("/:username", jsonParser, async (req: Request, res: Response) => {
   if (!verifyToken(req, res)) {
     return res.status(403).json({"message": '<b>Trebue sa fi logat pentru a accesa aceasta zona!<b>'});
 }
-  const userId: number = Number(req.params.id);
-  console.log(userId);
-  adminModel.deleteUser(userId, (err: Error) => {
+  const userId: string = req.params.username;
+  
+
+  console.log( "username", req.params.username);
+  adminModel.deleteUser(userId , (err: Error) => {
     if (err) {
       return res.status(500).json({"message": err.message});
     }
@@ -84,7 +99,8 @@ adminRouter.post("/veifyLogin",jsonParser, async (req: Request, res: Response) =
      console.log('JWT', token);
     //res.status(200).json({"message": 'success'});
     res.status(200).send({
-      accessToken: token
+      accessToken: token,
+      master: user.master
     });
   });
 });

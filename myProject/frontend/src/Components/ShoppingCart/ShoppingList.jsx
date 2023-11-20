@@ -1,63 +1,78 @@
-import React, { useState, useEffect, useContext } from "react";
-
+import React, { useState, useContext } from "react";
 import { CartContext } from "../../context/cartContext";
-import "./css/shoppingList.css";
-import Stripe from "../Stripe_card_pay/stripe"
+import Stripe from "../Stripe_card_pay/stripe2";
+import LoginModal from "./LoginModal";
 
 export default function ShoppingList() {
-  const { content, setContent } = useContext(CartContext);
+  const { content, totalPrice } = useContext(CartContext);
+  const [togglePay, setTogglePay] = useState(false);
 
-  const { totalPrice, setTotalPrice } = useContext(CartContext);
+  const auth = localStorage.getItem("authenticated");
 
-  const [togglePay, setTogglePay] = useState(false)
+  let [user, setUser] = useState(auth);
 
-  return (
-    <>
-      <div className="flex flex-row m-[5vh] ">
-        <div
-          id="parent"
-          className="flex flex-col  left-[25%] top-[10.53vh] w-[40%]  border-2 border-indigo-600 overflow-auto "
-        >
-          {content.map((Val) => {
-            
-            return (
-              <>
+  // console.log("user", user);
+
+  const renderHTML = (content) => {
+    
+      return (
+        <>
+          <div className="flex md:flex-row mx-5 my-10 md:my-0">
+            <div className="w-full mt-4 md:w-2/5 border-2 border-indigo-600 p-4 rounded-lg">
+              <div className="h-[600px] overflow-auto">
+              {content.map((item, index) => (
                 <div
-                  key={Val.id}
-                  className=" flex  flex-row border-2 border-black w-[96%] h-[20%] m-[5px] zIndex "
+                  key={index}
+                  className="flex items-center my-4 border-b border-gray-300 pb-4"
                 >
-                  <div className="w-[20%] h-[100%] border-black ">
-                    <img
-                      className="h-[100%] w-[100%] "
-                      src={Val.img}
-                      alt="img"
-                    />
-                  </div>
-                  <div className="w-[20%] h-[100%]  border-black ">
-                    <p>{Val.title}</p>
-
-                    <p className="text-s">{Val.category}</p>
-
-                    <p>{Val.price * Val.qty} $</p>
+                  <img
+                    className="w-16 h-16 mr-4 rounded-md"
+                    src={item.img}
+                    alt="Product"
+                  />
+                  <div>
+                    <p className="text-lg font-semibold">{item.title}</p>
+                    <p className="text-sm text-gray-600">{item.category}</p>
+                    <p className="text-lg font-semibold">
+                      ${item.price * item.qty}
+                    </p>
                   </div>
                 </div>
-              </>
-            );
-          })}
-        </div>
-        <div className="bg-gray-400 pt-[10%] p-[5px]">
-        <button onClick={()=>setTogglePay(!togglePay)} class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
-            TOTAL: {totalPrice} $
-        </button>
-        </div>
-          {togglePay &&(
-            <div className="flex ml-[10%]">
-                <Stripe
-                totalPrice = {totalPrice}
-                />
+              ))}
+              </div>
+            <div className=" mt-4 bg-gray-100 md:bg-gray-400 rounded-lg p-4 flex flex-col items-center justify-center mt-4 ">
+              <div
+                
+                className="bg-blue-500  text-white font-semibold py-2 px-4 rounded-full"
+              >
+                TOTAL: ${totalPrice}
+              </div> 
+              
+              {user === 'true' ? (
+              <button
+              onClick={() => setTogglePay(!togglePay)}
+              className="bg-blue-500 hover:bg-blue-400 text-white font-semibold py-2 px-4 rounded-full"
+            >
+              finalizeaza comanda
+            </button> 
+            ):(<LoginModal/>)}
+              
+              
+              
             </div>
-          )}
-      </div>
-    </>
-  );
+            </div>
+
+            
+            {togglePay && (
+              <div className="mt-4 md:mt-0 md:ml-10 w-full md:w-3/5 flex items-center justify-center">
+                <Stripe totalPrice={totalPrice} cartContent={content} />
+              </div>
+            )}
+          </div>
+        </>
+      );
+    
+  };
+
+  return renderHTML(content);
 }

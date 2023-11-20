@@ -1,20 +1,20 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, {  useState, useContext } from "react";
 
 import "./LoginPopup.css";
 
-import { useNavigate, Link } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 import * as Yup from "yup";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field } from "formik";
 
 import { AuthContext } from "../../context/authContext";
 
-import NavBar from "../layout/NavBar";
-import { AxiosError } from "axios";
+// import NavBar from "../layout/NavBar";
+// import { AxiosError } from "axios";
 
 export default function LoginPopup({ toggle, isUser }) {
 
-  let navigate = useNavigate();
+  // let navigate = useNavigate();
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -51,7 +51,7 @@ export default function LoginPopup({ toggle, isUser }) {
     } catch(err) {if(err.response.status === 401){
         alert('nume sau parola gresita')
         setError(true)
-        console.log(err)
+        // console.log(err)
     } 
       }
     }

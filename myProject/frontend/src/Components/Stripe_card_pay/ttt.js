@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { render } from "react-dom";
 import Styles from "./Styles";
 import { Form, Field } from "react-final-form";
 import Card from "./Card";
@@ -8,17 +9,12 @@ import {
   formatExpirationDate,
 } from "./cardUtils";
 import axios from "axios";
-import LoadingScreen from "./LoadingScreen"; // Import the LoadingScreen component
 
 axios.defaults.baseURL = "http://localhost:3002/api";
 
-export default function Stripe({ totalPrice, cartContent }) {
-  const keykart = ['id', 'title', 'img', 'qty'];
-  const [valueKart, setValueKart] = useState([]);
-  const [finalObj, setFinalObj] = useState([]);
-  const [loading, setLoading] = useState(false); // State for loading screen
-  const [redirectToHome, setRedirectToHome] = useState(false); // State for redirection
+// const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
+export default function Stripe({ totalPrice, cartContent }) {
   useEffect(() => {
     if (!window.document.getElementById("stripe-script")) {
       var s = window.document.createElement("script");
@@ -34,26 +30,44 @@ export default function Stripe({ totalPrice, cartContent }) {
     }
   }, []);
 
+
+ 
+  const keykart = ['id', 'title', 'img', 'qty']
+
+  const [valueKart, setValueKart] = useState([])
+
+  const [finalObj, setFinalObj] = useState([])
+
   const sendCart = (a) => {
+
+    
     const updatedValueKart = [...valueKart];
+  
     a.map((elem) => {
       let keyMap = keykart.map((itm) => {
         return elem[itm];
       });
       updatedValueKart.push(keyMap);
     });
-
+  
+    
     setValueKart(updatedValueKart);
-
+  
+    
     const updatedFinalObj = [...finalObj];
+  
     updatedValueKart.map((elem) => {
       const rezultObj = Object.fromEntries(
         keykart.map((key, index) => [key, elem[index]])
       );
       updatedFinalObj.push(rezultObj);
     });
-
+  
+    
     setFinalObj(updatedFinalObj);
+  
+    console.log('Updated valueKart:', updatedValueKart);
+    console.log('Updated finalObj:', updatedFinalObj);
 
     axios
       .post("http://localhost:3002/orders", {
@@ -67,8 +81,38 @@ export default function Stripe({ totalPrice, cartContent }) {
       .catch((err) => console.log('kart err', err));
   };
 
+  // const sendCart =   (a) => {
+    
+    
+  //    a.map(elem => {
+  //     let keyMap=  (keykart.map(itm => {
+  //       return elem[itm]
+  //    }))
+  //    console.log('1 map-keykart', keyMap)
+
+  //     setValueKart(oldArray => [...oldArray, keyMap])
+
+  //   console.log('1 map-setValueKart', valueKart)
+
+
+  //   })
+  //   valueKart.map(elem => {
+
+  //     const rezultObj = Object.fromEntries(keykart.map((key, index) => [key, elem[index]]))
+  //     setFinalObj(oldArray => [...oldArray, rezultObj])
+  //     console.log('valueKart in map', valueKart)
+  //   })
+  //   console.log('finalObj', finalObj)
+  // }
+    
+
+  
+    
+ 
+
+
   const onSubmit = async (values) => {
-    setLoading(true); // Display loading screen
+    // await sleep(300);
     try {
       window.Stripe.card.createToken(
         {
@@ -86,39 +130,33 @@ export default function Stripe({ totalPrice, cartContent }) {
                 email: values.email,
                 amount: values.amount,
               })
-              .then(() => {
-                sendCart(cartContent);
-                setLoading(false); // Hide loading screen
-                setRedirectToHome(true); // Redirect to the homepage
-              })
-              .catch((err) => {
-                // console.log(err);
-                setLoading(false); // Hide loading screen
-              });
+              
+              // .then((res)=> )
+              .catch((err) => console.log(err));
+              sendCart(cartContent)
+              // console.log('cartContent',cartContent)
+            
           } else {
-            // console.log(response.error.message);
-            setLoading(false); // Hide loading screen
+            console.log(response.error.message);
           }
         }
       );
-    } catch (error) {
-      setLoading(false); // Hide loading screen
-    }
+    } catch (error) { }
   };
-
-  if (redirectToHome) {
-    // Redirect to the homepage
-    window.location.href = "/"; // Change this URL to the homepage URL
-  }
 
   return (
     <Styles>
-      {loading ? ( // Show loading screen if loading is true
-        <LoadingScreen />
-      ) : (
-        <Form
-          onSubmit={onSubmit}
-          render={({ handleSubmit, form, submitting, pristine, values, active }) => (
+      <Form
+        onSubmit={onSubmit}
+        render={({
+          handleSubmit,
+          form,
+          submitting,
+          pristine,
+          values,
+          active,
+        }) => {
+          return (
             <form onSubmit={handleSubmit}>
               <Card
                 number={values.number || ""}
@@ -134,6 +172,7 @@ export default function Stripe({ totalPrice, cartContent }) {
                   type="number"
                   placeholder="Amount"
                   initialValue={totalPrice}
+
                 />
                 <Field
                   name="email"
@@ -194,10 +233,13 @@ export default function Stripe({ totalPrice, cartContent }) {
                 </button>
               </div>
               <h2>Values</h2>
+
             </form>
-          )}
-        />
-      )}
+          );
+        }}
+      />
     </Styles>
   );
 }
+
+// render(<App />, document.getElementById("root"));

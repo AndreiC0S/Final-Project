@@ -3,7 +3,7 @@ import { db } from "../db";
 import bcryptjs from "bcryptjs";
 import { OkPacket, RowDataPacket } from "mysql2";
 
-// Get all users
+// Get all 
 export const findAll = (callback: Function) => {
   const queryString = `SELECT * FROM admins`;
   db.query(queryString, (err, result) => {
@@ -25,25 +25,25 @@ export const findAll = (callback: Function) => {
   });
 };
 
-// // Get one user
-// export const findOne = (userId: number, callback: Function) => {
-//   const queryString = `SELECT * FROM users WHERE id=?`;
-//   db.query(queryString, userId, (err, result) => {
-//     if (err) {
-//       callback(err);
-//     }
+// Get one 
+export const findOne = (adminId: number, callback: Function) => {
+  const queryString = `SELECT * FROM admins WHERE id=?`;
+  db.query(queryString, adminId, (err, result) => {
+    if (err) {
+      callback(err);
+    }
 
-//     const row = (<RowDataPacket>result)[0];
-//     const user: User = {
-//       id: row.id,
-//       nume: row.nume,
-//       prenume: row.prenume,
-//       email: row.email,
-//       parola: row.parola,
-//     };
-//     callback(null, user);
-//   });
-// };
+    const row = (<RowDataPacket>result)[0];
+    const user: Admin = {
+      id: row.id,
+      username: row.username,
+      password: row.password,
+      email: row.email,
+      master: row.master,
+    };
+    callback(null, user);
+  });
+};
 
 
 export const create = (user: Admin, callback: Function) => {
@@ -56,7 +56,7 @@ export const create = (user: Admin, callback: Function) => {
       callback("User already exists!." + err?.message);
     } else {
       const queryString =
-        "INSERT INTO admins (username, password, email) VALUES (?, ?, ?)";
+        "INSERT INTO admins (username, password, email, master) VALUES (?, ?, ?, ?)";
       console.log("insert",user);
       
       let saltRounds = bcryptjs.genSaltSync(10);
@@ -64,7 +64,7 @@ export const create = (user: Admin, callback: Function) => {
       try {
         db.query(
           queryString,
-          [user.username, password_hash, user.email,],
+          [user.username, password_hash, user.email, user.master],
           (err, result) => {
             if (<OkPacket>result !== undefined) {
               
@@ -87,9 +87,9 @@ export const create = (user: Admin, callback: Function) => {
 
 
 // delete user
-export const deleteUser = (user: number, callback: Function) => {
-  console.log(user);
-  const queryString = `DELETE FROM admins WHERE id=?`;
+export const deleteUser = (user: string, callback: Function) => {
+  console.log('deleteUser', user);
+  const queryString = `DELETE FROM admins WHERE username=?`;
 
   db.query(queryString, [user], (err, result) => {
     if (err) {
@@ -101,7 +101,7 @@ export const deleteUser = (user: number, callback: Function) => {
 
 //login  example
 export const veifyPassword = (user: Admin, callback: Function) => {
-    const queryString = `SELECT id, username, password, email from admins where email=? AND username=? LIMIT 1;`;
+    const queryString = `SELECT id, username, password, email, master from admins where email=? AND username=? LIMIT 1;`;
     const passwordUser = user.password;
     db.query(queryString, [user.email, user.username], (err, result) => {
       if (err) {
@@ -121,6 +121,7 @@ export const veifyPassword = (user: Admin, callback: Function) => {
             username: row.username,
             password: row.password,
             email: row.email,
+            master: row.master,
             
           };
           callback(null, user);

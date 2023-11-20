@@ -8,7 +8,7 @@ dotenv.config();
 export function generateToken() {
   // information to be encoded in the JWT
   const payload = {
-    name: 'ReactBlog',
+    name: 'reactblog',
     accessTypes: [
       'getPosts',
       'addPost',

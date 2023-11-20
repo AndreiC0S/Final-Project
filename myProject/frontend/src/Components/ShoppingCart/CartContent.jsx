@@ -97,7 +97,7 @@ export default function CartContent() {
           
       <div className=" flex flex-col items-center  bg-white rounded-md z-50" >
             <p className="" >Total:  {totalPrice} $</p>     
-          {totalPrice >0 &&(
+          {totalPrice > 0 && (
             <a href="/shopping-list" className="bg-green-500 rounded-md w-full">finalizeaza comanda</a>
             
               

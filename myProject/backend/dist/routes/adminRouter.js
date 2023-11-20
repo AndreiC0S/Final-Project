@@ -56,6 +56,18 @@ adminRouter.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(200).json({ "data": users });
     });
 }));
+adminRouter.get("/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!(0, jwt_2.verifyToken)(req, res)) {
+        return res.status(403).json({ "message": '<b>Trebue sa fi logat pentru a accesa aceasta zona!<b>' });
+    }
+    const adminId = Number(req.params.id);
+    adminModel.findOne(adminId, (err, user) => {
+        if (err) {
+            return res.status(500).json({ "message": err.message });
+        }
+        res.status(200).json({ "data": user });
+    });
+}));
 adminRouter.post("/", jsonParser, [
     (0, check_1.check)('username').not().isEmpty(),
     (0, check_1.check)('password', 'Password must be 8 or more characters').matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[●!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~]).{7,}$/, "i"),
@@ -76,12 +88,12 @@ adminRouter.post("/", jsonParser, [
     });
 }));
 // Delete user
-adminRouter.delete("/:id", jsonParser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+adminRouter.delete("/:username", jsonParser, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!(0, jwt_2.verifyToken)(req, res)) {
         return res.status(403).json({ "message": '<b>Trebue sa fi logat pentru a accesa aceasta zona!<b>' });
     }
-    const userId = Number(req.params.id);
-    console.log(userId);
+    const userId = req.params.username;
+    console.log("username", req.params);
     adminModel.deleteUser(userId, (err) => {
         if (err) {
             return res.status(500).json({ "message": err.message });
@@ -104,7 +116,8 @@ adminRouter.post("/veifyLogin", jsonParser, (req, res) => __awaiter(void 0, void
         console.log('JWT', token);
         //res.status(200).json({"message": 'success'});
         res.status(200).send({
-            accessToken: token
+            accessToken: token,
+            master: user.master
         });
     });
 }));

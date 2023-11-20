@@ -2,8 +2,8 @@ import React, { useState,useEffect,useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Login from "../login-Register/Login";
 import SignUp from "../login-Register/SignUp";
-import LoginPopup from "../login-Register/LoginPopup";
-import ShoppingCart from "../ShoppingCart/ShoppingCart";
+// import LoginPopup from "../login-Register/LoginPopup";
+// import ShoppingCart from "../ShoppingCart/ShoppingCart";
 import { AuthContext } from "../../context/authContext";
 
 
@@ -52,12 +52,12 @@ export default function NavBar() {
   
   return (
     <>
-      <header class="flex w-full text-white shadow-sm body-font bg-gradient-to-r from-indigo-500 via-pink-500 to-purple-500 ">
-        <div class="container flex flex-col items-start justify-between p-6 mx-auto md:flex-row ">
-          <a class="flex items-center mb-4 font-medium text-gray-900 title-font md:mb-0">
+      <header className="flex w-full text-white shadow-sm body-font bg-gradient-to-r from-indigo-500 via-pink-500 to-purple-500 ">
+        <div className="container flex flex-col items-start justify-between p-6 mx-auto md:flex-row ">
+          <p className="flex items-center mb-4 font-medium text-gray-900 title-font md:mb-0">
             LOGO
-          </a>
-          <nav class="flex absolute flex-wrap items-center justify-center left-[30%] text-base  md:ml-auto md:mr-auto hidden md:block">
+          </p>
+          <nav className="flex absolute flex-wrap items-center justify-center left-[30%] text-base  md:ml-auto md:mr-auto hidden md:block">
             <Link to="/">
               {" "}
               <span
@@ -78,7 +78,7 @@ export default function NavBar() {
                 Products
               </span>
             </Link>
-            <Link to="/about">
+            {/* <Link to="/about">
               {" "}
               <span
                 className={`mr-5 font-medium hover:text-amber-300 ${activePageLink(
@@ -97,10 +97,10 @@ export default function NavBar() {
               >
                 Contact
               </span>
-            </Link>
+            </Link> */}
           </nav>
           
-          <div class=" flex items-center h-full hidden md:block">
+          <div className=" flex items-center h-full hidden md:block">
             
             
             {user && (
@@ -115,7 +115,7 @@ export default function NavBar() {
               <>
               <Login
               isUser={handdleUser}/>
-                <a href="/Sign-Up" class=" px-4 py-2 text-xs font-bold text-black uppercase transition-all duration-150 bg-amber-300 
+                <a href="/Sign-Up" className=" px-4 py-2 text-xs font-bold text-black uppercase transition-all duration-150 bg-amber-300 
               rounded shadow outline-none active:bg-teal-600 hover:shadow-md focus:outline-none ease">
                   Sign Up
                 </a>
@@ -138,7 +138,7 @@ export default function NavBar() {
 
             <div className={isNavOpen ? "showMenuNav" : "hideMenuNav"}>
               {" "}
-              <div class="items-center">
+              <div className="items-center">
             <Login/>
             {!user && (
             <SignUp/>

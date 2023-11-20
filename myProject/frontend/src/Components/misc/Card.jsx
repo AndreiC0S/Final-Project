@@ -53,7 +53,7 @@ const CardBox = () => {
         responseType: "json",
       })
       .then(function (response) {
-        console.log(response.data.data);
+        // console.log(response.data.data);
         setDataItem(response.data.data)
       });
   },[]);

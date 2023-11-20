@@ -7,6 +7,7 @@ import { userRouter } from './routes/userRouter';
 import { prodRouter } from './routes/productsRouter';
 import { adminRouter } from './routes/adminRouter';
 import { stripeRouter } from './routes/stripeRouter';
+import { orderRouter } from './routes/orderRouter';
 
 dotenv.config();
 
@@ -23,7 +24,8 @@ const port = process.env.PORT;
 app.use(cors());
 app.use("/users", userRouter);
 app.use("/products", prodRouter);
-app.use("/admin", adminRouter);
+app.use("/admins", adminRouter);
+app.use("/orders", orderRouter);
 app.get('/', (req: Request, res: Response) => {
   //res.send('Express + TypeScript Server!!!!');
   res.sendFile(path.join(__dirname+'/acasa.html'));

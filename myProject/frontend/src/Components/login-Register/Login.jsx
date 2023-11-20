@@ -16,7 +16,7 @@ export default function Login({isUser}) {
   return (
     <>
     
-    <button onClick={handleToggle} class="  mr-5 font-medium hover:text-amber-300">
+    <button onClick={handleToggle} className="  mr-5 font-medium hover:text-amber-300">
       Login
     </button> 
     

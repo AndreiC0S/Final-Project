@@ -2,23 +2,16 @@ import React, { useEffect, useState, useContext } from "react";
 
 import "./LoginPopup.css";
 
-import { useNavigate, Link } from "react-router-dom";
-
 import * as Yup from "yup";
 
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
 import { AuthContext } from "../../context/authContext";
 
-
 import { AxiosError } from "axios";
 
 export default function LoginPopup({ toggle, isUser }) {
-
-  let navigate = useNavigate();
-
   const validationSchema = Yup.object().shape({
-
     username: Yup.string()
       // .username("username invalid")
       .required("Camp obligatoriu!"),
@@ -28,14 +21,10 @@ export default function LoginPopup({ toggle, isUser }) {
       .required("Camp obligatoriu!"),
 
     password: Yup.string().required("Camp obligatoriu!"),
-
-    
-    
-    
   });
 
   const [formData, setFormData] = useState({
-    username:"",
+    username: "",
     email: "",
     password: "",
   });
@@ -43,43 +32,38 @@ export default function LoginPopup({ toggle, isUser }) {
   const [err, setError] = useState(false);
 
   const handleInputChange = (event) => {
-
     const { name, value } = event.target;
 
     setFormData({ ...formData, [name]: value });
-
   };
 
   const { login } = useContext(AuthContext);
 
-
   const handleSubmit = async (e) => {
-    console.log('handdle')
+    // console.log("handdle");
     try {
-      
       await login(formData); // await axios.post("/users/login", inputs);
       // navigate("/");
       // toggle()
-      isUser()
-      
-    } catch(err) {if(err.response.status === 401){
-        alert('nume sau parola gresita')
-        setError(true)
-        console.log(err)
-    } 
+      isUser();
+    } catch (err) {
+      if (err.response.status === 401) {
+        alert("nume sau parola gresita");
+        setError(true);
+        // console.log(err);
       }
     }
+  };
   return (
     <>
-    
-      <div className=" bg-gradient-to-r from-indigo-500 via-pink-500 to-purple-500" id="top">
+      <div
+        className=" bg-gradient-to-r from-indigo-500 via-pink-500 to-purple-500"
+        id="top"
+      >
         <div
           id="LoginPopup"
           className=" absolute w-max h-[350px] top-[30.5%] left-[41%] bg-amber-400 rounded-xl p-[1vw]  "
         >
-         
-
-
           <Formik
             initialValues={formData}
             onSubmit={handleSubmit}
@@ -90,7 +74,10 @@ export default function LoginPopup({ toggle, isUser }) {
               <p className=" text-black mb-[3vh] ">Welcome back</p>
 
               {err && (
-              <p className="text-red-700 mb-[1vh]"> Email sau parola gresita</p>
+                <p className="text-red-700 mb-[1vh]">
+                  {" "}
+                  Email sau parola gresita
+                </p>
               )}
               <Field
                 className="block rounded block text-black "

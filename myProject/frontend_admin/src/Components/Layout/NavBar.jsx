@@ -1,20 +1,21 @@
-import React, { useState,useEffect,useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
 
-
-
 export default function NavBar() {
+  const { authenticated } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
 
-  const {authenticated} = useContext(AuthContext)
-  
+  let { logout } = useContext(AuthContext);
+
+  // console.log("admin", typeof(currentUser.master));
+
   const location = useLocation();
   const [isNavOpen, setIsNavOpen] = useState(false); // initiate isNavOpen state with false
 
-  const [user, setUser]= useState(false)
+  const [user, setUser] = useState(false);
 
   const path = location.pathname;
-  // console.log("🚀 ~ file: NavBar.js:11 ~ NavBar ~ path:", path);
 
   const activePageLink = (page) => {
     if (page === path) {
@@ -23,16 +24,16 @@ export default function NavBar() {
       return;
     }
   };
-  //     //-------------------------------------------------------------------------
-  
+  //-------------------------------------------------------------------------
+
   return (
     <>
-      <header class="flex w-full text-white shadow-sm body-font bg-gradient-to-r from-indigo-500 via-pink-500 to-purple-500 ">
-        <div class="container flex flex-col items-start justify-between p-6 mx-auto md:flex-row ">
-          <a class="flex items-center mb-4 font-medium text-gray-900 title-font md:mb-0">
+      <header className="flex w-full text-white shadow-sm body-font bg-gradient-to-r from-indigo-500 via-pink-500 to-purple-500 ">
+        <div className="container flex flex-col items-start justify-between p-6 mx-auto md:flex-row ">
+          <a className="flex items-center mb-4 font-medium text-gray-900 title-font md:mb-0">
             LOGO
           </a>
-          <nav class="flex absolute flex-wrap items-center justify-center left-[30%] text-base  md:ml-auto md:mr-auto hidden md:block">
+          <nav className="flex absolute flex-wrap items-center justify-center left-[30%] text-base  md:ml-auto md:mr-auto hidden md:block">
             <Link to="/">
               {" "}
               <span
@@ -46,43 +47,44 @@ export default function NavBar() {
 
             {authenticated && (
               <>
-            <Link to="/products">
-              {" "}
-              <span
-                className={`mr-5 font-medium hover:text-amber-300 ${activePageLink(
-                  "/products"
-                )}`}
-              >
-                Products
-              </span>
-            </Link>
-            <Link to="/users">
-              {" "}
-              <span
-                className={`mr-5 font-medium hover:text-amber-300 ${activePageLink(
-                  "/users"
-                )}`}
-              >
-                Users
-              </span>
-            </Link>
-            <Link to="/admins">
-              {" "}
-              <span
-                className={`mr-5 font-medium hover:text-amber-300 ${activePageLink(
-                  "/admins"
-                )}`}
-              >
-                Admins
-              </span>
-            </Link>
+                <Link to="/products">
+                  {" "}
+                  <span
+                    className={`mr-5 font-medium hover:text-amber-300 ${activePageLink(
+                      "/products"
+                    )}`}
+                  >
+                    Products
+                  </span>
+                </Link>
+
+                {Number(currentUser.master) === 1 && (
+                  <>
+                    <Link to="/admins">
+                      {" "}
+                      <span
+                        className={`mr-5 font-medium hover:text-amber-300 ${activePageLink(
+                          "/admins"
+                        )}`}
+                      >
+                        Admins
+                      </span>
+                    </Link>
+                  </>
+                )}
               </>
-              
             )}
           </nav>
+          {currentUser && (
+            <>
+              <button onClick={logout}>
+                <p className=" inline ">Log</p>
+                <p className=" inline  text-amber-200">Out</p>
+              </button>
+            </>
+          )}
         </div>
       </header>
-      
     </>
   );
 }

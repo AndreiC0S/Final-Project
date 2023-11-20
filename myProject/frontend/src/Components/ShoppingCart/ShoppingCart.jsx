@@ -18,9 +18,9 @@ export default function ShoppingCart() {
   return (
     <>
       <button className="toggle-cart " onClick={handleToggleCart}>
-        <i class="fas fa-shopping-cart text-black "></i>
+        <i className="fas fa-shopping-cart text-black "></i>
       </button>
-      <span class="cart-item-count m-0 p-0">{cartLenght}</span>
+      <span className="cart-item-count m-0 p-0">{cartLenght}</span>
       {!cart && (
         <>
           <CartContent newCart={newCart} setNewCart={setNewCart} />

@@ -1,5 +1,9 @@
 CREATE SCHEMA `reactblog` DEFAULT CHARACTER SET utf8 ;
 
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+
 CREATE TABLE `reactblog`.`admins` (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(450) NOT NULL,
@@ -9,8 +13,20 @@ CREATE TABLE `reactblog`.`admins` (
   UNIQUE KEY `id_UNIQUE` (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8
 
+-- 1.
+
+ALTER TABLE `reactblog`.`admins` 
+ADD COLUMN `master` TINYINT NULL AFTER `email`;
+
+-- 2.
+ALTER TABLE `reactblog`.`admins` 
+CHANGE COLUMN `master` `master` VARCHAR(450) NULL ;
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
 
 CREATE TABLE `reactblog`.`products` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -21,7 +37,11 @@ CREATE TABLE `reactblog`.`products` (
   `pret_produs` varchar(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
 
 CREATE TABLE `reactblog`.`users` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -32,4 +52,33 @@ CREATE TABLE `reactblog`.`users` (
   `dataadaugare` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email_UNIQUE` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb3
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8
+
+--------------------------------------------------------------------------------
+
+--------------------------------------------------------------------------------
+
+-- 1.
+CREATE TABLE `reactblog`.`orders` (
+  `id_orders` INT NOT NULL AUTO_INCREMENT,
+  `country` VARCHAR(70) NOT NULL,
+  `address` VARCHAR(4500) NOT NULL,
+  `items` VARCHAR(7000) NOT NULL,
+  `comments` VARCHAR(300) NULL,
+  PRIMARY KEY (`id_orders`),
+  UNIQUE INDEX `id_orders_UNIQUE` (`id_orders` ASC) VISIBLE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+-- 2.
+ALTER TABLE `reactblog`.`orders` 
+ADD COLUMN `paid_card` TINYINT NOT NULL DEFAULT 0 AFTER `items`,
+CHANGE COLUMN `country` `country` VARCHAR(70) NOT NULL ,
+CHANGE COLUMN `items` `items` JSON NOT NULL ;
+
+--3.
+ALTER TABLE `reactblog`.`orders` 
+ADD COLUMN `status` VARCHAR(45) NOT NULL DEFAULT 'online' AFTER `comments`;
+
+
+--------------------------------------------------------------------------------
