@@ -1,10 +1,11 @@
-CREATE SCHEMA `reactblog` DEFAULT CHARACTER SET utf8 ;
+CREATE SCHEMA `acwebsit_reactblog` DEFAULT CHARACTER SET utf8 ;
+
 
 --------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------
 
-CREATE TABLE `reactblog`.`admins` (
+CREATE TABLE `acwebsit_reactblog`.`admins` (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(450) NOT NULL,
   `password` varchar(450) NOT NULL,
@@ -17,18 +18,21 @@ CREATE TABLE `reactblog`.`admins` (
 
 -- 1.
 
-ALTER TABLE `reactblog`.`admins` 
+ALTER TABLE `acwebsit_reactblog`.`admins` 
 ADD COLUMN `master` TINYINT NULL AFTER `email`;
 
 -- 2.
-ALTER TABLE `reactblog`.`admins` 
+ALTER TABLE `acwebsit_reactblog`.`admins` 
 CHANGE COLUMN `master` `master` VARCHAR(450) NULL ;
 
---------------------------------------------------------------------------------
+-- 3.
+INSERT INTO `admins` (`id`, `username`, `password`, `email`, `master`) VALUES (NULL, 'root', 'root', 'root@gmail.com', '1');
 
 --------------------------------------------------------------------------------
 
-CREATE TABLE `reactblog`.`products` (
+--------------------------------------------------------------------------------
+
+CREATE TABLE `acwebsit_reactblog`.`products` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nume_produs` varchar(200) NOT NULL,
   `descriere_produs` varchar(500) NOT NULL,
@@ -43,7 +47,7 @@ CREATE TABLE `reactblog`.`products` (
 
 --------------------------------------------------------------------------------
 
-CREATE TABLE `reactblog`.`users` (
+CREATE TABLE `acwebsit_reactblog`.`users` (
   `id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `nume` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
@@ -59,7 +63,7 @@ CREATE TABLE `reactblog`.`users` (
 --------------------------------------------------------------------------------
 
 -- 1.
-CREATE TABLE `reactblog`.`orders` (
+CREATE TABLE `acwebsit_reactblog`.`orders` (
   `id_orders` INT NOT NULL AUTO_INCREMENT,
   `country` VARCHAR(70) NOT NULL,
   `address` VARCHAR(4500) NOT NULL,
@@ -71,13 +75,13 @@ ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 -- 2.
-ALTER TABLE `reactblog`.`orders` 
+ALTER TABLE `acwebsit_reactblog`.`orders` 
 ADD COLUMN `paid_card` TINYINT NOT NULL DEFAULT 0 AFTER `items`,
 CHANGE COLUMN `country` `country` VARCHAR(70) NOT NULL ,
 CHANGE COLUMN `items` `items` JSON NOT NULL ;
 
 --3.
-ALTER TABLE `reactblog`.`orders` 
+ALTER TABLE `acwebsit_reactblog`.`orders` 
 ADD COLUMN `status` VARCHAR(45) NOT NULL DEFAULT 'online' AFTER `comments`;
 
 

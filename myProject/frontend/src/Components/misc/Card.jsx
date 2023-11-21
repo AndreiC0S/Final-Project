@@ -73,7 +73,7 @@ const CardBox = () => {
               className=" flex rounded break-words bg-white border-gray-300  mb-5 mr-6"
               key={Number(Val.id)}
             >
-              <Card className="w-96 z-30">
+              <Card className="w-96 h-[500px] z-30 overflow-auto">
                 <CardHeader
                   shadow={false}
                   floated={false}

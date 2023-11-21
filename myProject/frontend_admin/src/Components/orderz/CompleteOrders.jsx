@@ -56,7 +56,7 @@ export default function CompleteOrder({ makePop, passOrd }) {
 
   return (
     <>
-      <div className="flex flex-col left-[50%] top-[7.5vh] bg-gray-300 w-[50vw] h-[83.35vh] overflow-auto">
+      <div className="flex flex-col ml-[10px] top-[7.5vh] bg-gray-300 w-[50vw] h-[83.35vh] overflow-auto">
         {/* <div className="flex flex-col">
           <p>Order ID: {passOrd[0].id}</p>
           <p>Country:{passOrd[0].country} </p>

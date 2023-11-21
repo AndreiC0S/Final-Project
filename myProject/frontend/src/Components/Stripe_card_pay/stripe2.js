@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Styles from "./Styles";
 import { Form, Field } from "react-final-form";
 import Card from "./Card";
+import { CartContext } from "../../context/cartContext";
 import {
   formatCreditCardNumber,
   formatCVC,
@@ -9,6 +10,7 @@ import {
 } from "./cardUtils";
 import axios from "axios";
 import LoadingScreen from "./LoadingScreen"; // Import the LoadingScreen component
+
 
 axios.defaults.baseURL = "http://localhost:3002/api";
 
@@ -18,6 +20,13 @@ export default function Stripe({ totalPrice, cartContent }) {
   const [finalObj, setFinalObj] = useState([]);
   const [loading, setLoading] = useState(false); // State for loading screen
   const [redirectToHome, setRedirectToHome] = useState(false); // State for redirection
+
+  const { content, setContent } = useContext(CartContext);
+
+  const clearCart = () => {
+
+    setContent([]);
+  };
 
   useEffect(() => {
     if (!window.document.getElementById("stripe-script")) {
@@ -64,6 +73,7 @@ export default function Stripe({ totalPrice, cartContent }) {
         comments: 'none',
         status: 'online'
       })
+
       .catch((err) => console.log('kart err', err));
   };
 
@@ -90,6 +100,7 @@ export default function Stripe({ totalPrice, cartContent }) {
                 sendCart(cartContent);
                 setLoading(false); // Hide loading screen
                 setRedirectToHome(true); // Redirect to the homepage
+                clearCart()
               })
               .catch((err) => {
                 console.log(err);
@@ -113,104 +124,109 @@ export default function Stripe({ totalPrice, cartContent }) {
 
   return (
     <Styles>
-    {loading ? ( // Show loading screen if loading is true
-      <LoadingScreen />
-    ) : (
-      <Form
-        onSubmit={onSubmit}
-        render={({ handleSubmit, form, submitting, pristine, values, active }) => (
-          <form onSubmit={handleSubmit} className="flex flex-col items-center max-w-md mx-auto p-4 space-y-4 bg-white rounded-lg shadow-lg">
-            <Card
-              number={values.number || ""}
-              name={values.name || ""}
-              expiry={values.expiry || ""}
-              cvc={values.cvc || ""}
-              focused={active}
-            />
-            <div className="space-y-2">
-            <Field
-              name="amount"
-              component="input"
-              type="number"
-              placeholder="Amount"
-              initialValue={totalPrice}
-              className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
-              readOnly // Make the "Amount" field read-only
-            />
-              <Field
-                name="email"
-                component="input"
-                type="text"
-                placeholder="Your email"
-                initialValue="ion@demo.com"
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+      {loading ? ( // Show loading screen if loading is true
+        <LoadingScreen />
+      ) : (
+        <Form
+          onSubmit={onSubmit}
+          render={({ handleSubmit, form, submitting, pristine, values, active }) => (
+            <form onSubmit={handleSubmit} className="flex flex-col items-center max-w-md mx-auto p-4 space-y-4 bg-white rounded-lg shadow-lg">
+              <Card
+                number={values.number || ""}
+                name={values.name || ""}
+                expiry={values.expiry || ""}
+                cvc={values.cvc || ""}
+                focused={active}
               />
-            </div>
-            <div className="space-y-2">
-              <Field
-                name="number"
-                component="input"
-                type="text"
-                pattern="[\d| ]{16,22}"
-                placeholder="Card Number"
-                initialValue="4242424242424242"
-                format={formatCreditCardNumber}
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
-              />
-            </div>
-            <div className="space-y-2">
-              <Field
-                name="name"
-                component="input"
-                type="text"
-                placeholder="Name"
-                initialValue="Ion A"
-                className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
-              />
-            </div>
-            <div className="space-y-2">
-              <Field
-                name="expiry"
-                component="input"
-                type="text"
-                pattern="\d\d/\d\d"
-                placeholder="Valid Thru"
-                format={formatExpirationDate}
-                className="w-1/2 p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
-              />
-              <Field
-                name="cvc"
-                component="input"
-                type="text"
-                pattern="\d{3,4}"
-                placeholder="CVC"
-                format={formatCVC}
-                className="w-1/2 p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
-              />
-            </div>
-            <div className="space-y-2">
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300"
-              >
-                Submit
-              </button>
-              <button
-                type="button"
-                onClick={form.reset}
-                disabled={submitting || pristine}
-                className="w-full py-2 bg-gray-300 text-gray-600 font-semibold rounded-md hover:bg-gray-200 focus:outline-none focus:ring focus:ring-gray-400"
-              >
-                Reset
-              </button>
-            </div>
-            <h2 className="text-xl font-semibold">Values</h2>
-          </form>
-        )}
-      />
-    )}
-  </Styles>
-  
+              <div className="space-y-2">
+                <Field
+                  name="amount"
+                  component="input"
+                  type="number"
+                  placeholder="Amount"
+                  initialValue={totalPrice}
+                  className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+                  readOnly // Make the "Amount" field read-only
+                />
+                <Field
+                  name="email"
+                  component="input"
+                  type="text"
+                  placeholder="Your email"
+                  initialValue="ion@demo.com"
+                  className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+                  validate={(value) => (value ? undefined : 'Email is required')}
+                />
+              </div>
+              <div className="space-y-2">
+                <Field
+                  name="number"
+                  component="input"
+                  
+                  
+                  placeholder="Card Number"
+                  
+                  format={formatCreditCardNumber}
+                  className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+                  validate={(value) => (value ? undefined : 'Card Number is required')}
+                />
+              </div>
+              <div className="space-y-2">
+                <Field
+                  name="name"
+                  component="input"
+                  type="text"
+                  placeholder="Name"
+                  initialValue="Ion A"
+                  className="w-full p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+                  validate={(value) => (value ? undefined : 'Name is required')}
+                />
+              </div>
+              <div className="space-y-2">
+                <Field
+                  name="expiry"
+                  component="input"
+                  type="text"
+                  pattern="\d\d/\d\d"
+                  placeholder="Valid Thru"
+                  format={formatExpirationDate}
+                  className="w-1/2 p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+                  validate={(value) => (value ? undefined : 'Expiry is required')}
+                />
+                <Field
+                  name="cvc"
+                  component="input"
+                  type="text"
+                  pattern="\d{3,4}"
+                  placeholder="CVC"
+                  format={formatCVC}
+                  className="w-1/2 p-2 border rounded-md focus:outline-none focus:ring focus:ring-blue-500"
+                  validate={(value) => (value ? undefined : 'CVC is required')}
+                />
+              </div>
+              <div className="space-y-2">
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-400 focus:outline-none focus:ring focus:ring-blue-300"
+                >
+                  Submit
+                </button>
+                <button
+                  type="button"
+                  onClick={form.reset}
+                  disabled={submitting || pristine}
+                  className="w-full py-2 bg-gray-300 text-gray-600 font-semibold rounded-md hover:bg-gray-200 focus:outline-none focus:ring focus:ring-gray-400"
+                >
+                  Reset
+                </button>
+              </div>
+
+            </form>
+          )}
+        />
+      )}
+    </Styles>
+
   );
 }

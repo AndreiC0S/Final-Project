@@ -117,11 +117,14 @@ export default function EditProduct({ setEditProd, passData, dataProp }) {
   return (
     <div
       id="editBox"
-      className="flex absolute flex-col space-y-8 text-center items-center w-[30vw] h-[80.3vh] left-[20%] top-[10.5%]   z-40 rounded-md "
+      
+      // className="flex absolute flex-col space-y-8 text-center items-center w-[30vw] h-[80.3vh] left-[20%] top-[10.5%]   z-40 rounded-md "
+      className="flex flex-col float-left  right-0 bg-gray-500  w-[350px] h-[700px]  overflow-auto space-y-8 text-center items-center z-40 rounded-md"
+      // className="flex absolute flex-col bg-gray-500 w-[350px] h-[700px] overflow-auto space-y-8 text-center items-center z-40 rounded-md"
     >
       <button
         onClick={() => setEditProd(false)}
-        className="flex absolute right-[10px] top-[10px] text-xl"
+        className="flex  text-xl"
       >
         X
       </button>

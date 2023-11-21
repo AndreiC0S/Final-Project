@@ -93,7 +93,7 @@ adminRouter.delete("/:username", jsonParser, (req, res) => __awaiter(void 0, voi
         return res.status(403).json({ "message": '<b>Trebue sa fi logat pentru a accesa aceasta zona!<b>' });
     }
     const userId = req.params.username;
-    console.log("username", req.params);
+    console.log("username", req.params.username);
     adminModel.deleteUser(userId, (err) => {
         if (err) {
             return res.status(500).json({ "message": err.message });

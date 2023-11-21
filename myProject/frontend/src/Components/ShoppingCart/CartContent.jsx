@@ -47,29 +47,29 @@ export default function CartContent() {
       <div id="kart-box" className="">
       
         <div className="">
-          <div id="kart-box-content" class="kart-box-content">
+          <div id="kart-box-content" className="kart-box-content">
         
             {content.map((Val, index) => {
               return (
-                <div key={index} class="addItemToCart">
-                  <img src={Val.img} class="single-product-img img" alt="" />
+                <div key={index} className="addItemToCart">
+                  <img src={Val.img} className="single-product-img img" alt="" />
                   <div>
                     <h3 className=" titleProduct">{Val.title} </h3>
 
-                    <div class="detalii ">
+                    <div className="detalii ">
                       <p className="mb-[2vh]"> </p>
                       <div id="btnContainer">
-                        <p class="qtyItems">Qty: {Val.qty} </p>
+                        <p className="qtyItems">Qty: {Val.qty} </p>
 
                         <button
-                          class="btnSubProduct buttonCart"
+                          className="btnSubProduct buttonCart"
                           onClick={() => decreaseQty(index)}
                         >
                           -
                         </button>
 
                         <button
-                          class="btnAddProduct  "
+                          className="btnAddProduct  "
                           onClick={() => increaseQty(index)}
                         >
                           +
@@ -79,13 +79,13 @@ export default function CartContent() {
                     </div>
                   </div>
 
-                  <div class="pPriceBox">
+                  <div className="pPriceBox">
                     <p> Total: </p>
-                    <p class="pPrice" data-price="" data-quantity="">
+                    <p className="pPrice" data-price="" data-quantity="">
                       {Val.qty * Val.price + " $"}
                     </p>
                   </div>
-                  <button class="deleteProduct" onClick={() => remove(Val.id)}>
+                  <button className="deleteProduct" onClick={() => remove(Val.id)}>
                     X
                   </button>
                 </div>

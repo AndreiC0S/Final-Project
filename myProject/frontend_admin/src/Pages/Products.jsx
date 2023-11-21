@@ -100,9 +100,9 @@ export default function Products() {
     <>
       <div>
         <div className="flex  w-[100hw] h-[3vh] bg-amber-300">
-          <p className="flex absolute left-[46.5%] bg-black h-[30px]  pt-[2px] text-white">
+          {/* <p className="flex absolute left-[46.5%] bg-black h-[30px]  pt-[2px] text-white">
             Products
-          </p>
+          </p> */}
           <button onClick={() => setAddProd(!addProd)}>AddProd</button>
         </div>
         {editProd && (
@@ -116,7 +116,8 @@ export default function Products() {
 
         <div
           id="parent"
-          className="flex flex-col absolute right-0 top-[10.54vh] w-[50%] h-[80.5vh] border-2 border-indigo-600 overflow-auto "
+          className="flex flex-col float-right  right-0 bg-gray-500 w-[49vw] h-[80.35vh] max-h-[80.5vh] border-2 border-indigo-600 overflow-auto "
+          // className="flex flex-col absolute right-0 top-[10.54vh] w-[50%] h-[80.5vh] border-2 border-indigo-600 overflow-auto "
         >
           {/* Bara de căutare */}
           <div className="flex items-center  mb-4">

@@ -54,7 +54,7 @@ export default function Orders() {
             return (
               <div
                 key={index}
-                className="w-[47.5vw] h-[50vh] mt-[5px] mb-[10px] bg-gray-300 rounded-md  "
+                className="w-[47.5vw] min-h-[500px] mt-[5px] mb-[10px] bg-gray-300 rounded-md  "
               >
                 <div className="flex flex-row items-center justify-between m-[5px]">
                   <div className="flex flex-col">
@@ -90,7 +90,7 @@ export default function Orders() {
                   </div>
                 </div>
 
-                <div className="h-[40vh]  overflow-auto">
+                <div className="h-[410px]  overflow-auto">
                   <table className=" w-full  bg-white  ">
                     <thead>
                       <tr>

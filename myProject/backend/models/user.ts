@@ -2,6 +2,7 @@ import { User } from "./../types/User";
 import { db } from "../db";
 import bcryptjs from "bcryptjs";
 import { OkPacket, RowDataPacket } from "mysql2";
+
 // Get all users
 export const findAll = (callback: Function) => {
   const queryString = `SELECT * FROM users`;
@@ -24,6 +25,7 @@ export const findAll = (callback: Function) => {
     callback(null, users);
   });
 };
+
 // Get one user
 export const findOne = (userId: number, callback: Function) => {
   const queryString = `SELECT * FROM users WHERE id=?`;

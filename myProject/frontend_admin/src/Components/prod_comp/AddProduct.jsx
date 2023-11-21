@@ -60,7 +60,7 @@ export default function AddProduct() {
   };
 
   return (
-    <div className="flex absolute top-[10.6vh]  flex-col border-2 border-black mt-[-2px] w-[20%] h-[45vh] p-[10px] items-center bg-gray-500">
+    <div className="flex absolute top-[10.6vh]  flex-col border-2 border-black mt-[-2px] w-[20%]  p-[10px] items-center bg-gray-500">
       <h1>Add Product</h1>
       <Formik
         initialValues={formData}
